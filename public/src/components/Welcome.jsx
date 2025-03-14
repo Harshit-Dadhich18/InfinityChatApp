@@ -15,15 +15,32 @@ export default function Welcome({currentUser}) {
 }
 
 const Container = styled.div`
-display:flex;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-color:white;
-img{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: white;
+
+  img {
     height: 20rem;
-}
-span{
-color: #4e00ff;
-}
+    width: auto;
+  }
+
+  span {
+    color: #4e00ff;
+  }
+
+  @media screen and (max-width: 720px) {
+    img {
+      height: 15rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1rem;
+    }
+  }
 `;
