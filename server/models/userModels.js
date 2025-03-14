@@ -30,4 +30,4 @@ const userSchema = new Schema({
     }
 })
 
-module.exports = mongoose.model("ChatappUser",userSchema);
+module.exports = mongoose.model("chatappuser",userSchema);
