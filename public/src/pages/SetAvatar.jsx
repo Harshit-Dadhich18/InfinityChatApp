@@ -28,31 +28,31 @@ export default function SetAvatar() {
         if (!localStorage.getItem('chat-app-user')) {
             navigate("/login");
         }
-    },[])
-    
+    }, [])
 
-    const setProfilePicture = async() => {
-        if(selectedAvatar === undefined){
+
+    const setProfilePicture = async () => {
+        if (selectedAvatar === undefined) {
             toast.error("Avatar not selected", toastOptions)
         }
-        else{
+        else {
             const user = await JSON.parse(localStorage.getItem("chat-app-user"));
-            const { data } = await axios.post(`${setAvatarRoute}/${user._id}`,{
+            const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
                 image: avatar[selectedAvatar]
             });
             console.log(data);
-            if(data.success){
+            if (data.success) {
                 user.isAvatarImageSet = true;
                 user.avatarImage = data.image;
-                localStorage.setItem("chat-app-user",JSON.stringify(user));
+                localStorage.setItem("chat-app-user", JSON.stringify(user));
                 localStorage.clear();
                 toast.success("You have successfully set your avatar. Please log in again.");
                 setTimeout(() => {
                     navigate('/login'); // Redirect after a brief delay
-                }, 2000); 
+                }, 2000);
                 // navigate('/login');
             }
-            else{
+            else {
                 toast.error("Error setting Avatar. Please try again later.")
             }
         }
@@ -71,82 +71,145 @@ export default function SetAvatar() {
         }
         setAvatar(data);
         setIsLoading(false);
-    },[]);
+    }, []);
 
-return (
-    <> {
-        isLoading ? <Container>
-            <img src={loader} alt="loader" />
-        </Container> : <Container>
-            <div className="title-container">
-                <h1>Pick an avatar for your profile picture</h1>
-            </div>
-            <div className="avatars">
-                {avatar.map((avatarData, index) => {
-                    return (
-                        <div
-                            key={index} className={`avatar ${selectedAvatar === index ? "selected" : ""
-                                }`}>
-                            <img src={avatarData} alt="avatar" onClick={() => setSelectedAvatar(index)} />
-                        </div>
-                    )
-                })}
-            </div>
-            <button className="submit-btn" onClick={setProfilePicture}>Set profile</button>
-        </Container>
-            }
+    return (
+        <> {
+            isLoading ? <Container>
+                <img src={loader} alt="loader" />
+            </Container> : <Container>
+                <div className="title-container">
+                    <h1>Pick an avatar for your profile picture</h1>
+                </div>
+                <div className="avatars">
+                    {avatar.map((avatarData, index) => {
+                        return (
+                            <div
+                                key={index} className={`avatar ${selectedAvatar === index ? "selected" : ""
+                                    }`}>
+                                <img src={avatarData} alt="avatar" onClick={() => setSelectedAvatar(index)} />
+                            </div>
+                        )
+                    })}
+                </div>
+                <button className="submit-btn" onClick={setProfilePicture}>Set profile</button>
+            </Container>
+        }
             <ToastContainer />
-    </>
-)
+        </>
+    )
 }
 
 const Container = styled.div`
-display:flex;
-justify-content: center;
-align-items: center;
-flex-direction:column;
-gap: 3rem;
-background-color:#131324;
-height:100vh;
-width:100vw;
-.loader{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 3rem;
+  background-color: #131324;
+  height: 100vh;
+  width: 100vw;
+  padding: 1rem;
+
+  .loader {
     max-inline-size: 100%;
+  }
+
+  .title-container {
+    h1 {
+      color: white;
+      text-align: center;
+      font-size: 2rem;
     }
-.title-container{
-    h1{
-    color:white;
-    }
-}
-.avatars{
-display:flex;
-align-items: center;
-gap:2rem;
-    .avatar{
-    border: 0.4rem solid transparent;
-    padding: 0.4rem;
-    border-radius: 5rem;
-    diplay:flex;
+  }
+
+  .avatars {
+    display: flex;
+    align-items: center;
     justify-content: center;
-    align-items:center;
-    transition:0.5s ease-in-out;
-        img{
-        height:6rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .avatar {
+      border: 0.4rem solid transparent;
+      padding: 0.4rem;
+      border-radius: 5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.5s ease-in-out;
+
+      img {
+        height: 6rem;
+        width: 6rem;
+        object-fit: cover;
+      }
     }
+
+    .selected {
+      border: 0.4rem solid wheat;
     }
-    .selected{
-    border:0.4rem solid wheat;
+  }
+
+  .submit-btn {
+    background-color: #997afe;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 0.4rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: 0.5s ease-in-out;
+
+    &:hover {
+      background-color: #4e0eff;
     }
+  }
+
+  @media (max-width: 768px) {
+    .title-container h1 {
+      font-size: 1.5rem;
     }
-.submit-btn{
-        background-color: #997afe;
-        color:white;
-        padding:1rem 2rem;
-        border:none;
-        cursor:pointer;
-        border-radius:0.4rem;
-        font-size:1rem;
-        text-transform:uppercase;
-        transition:0.5s ease-in-out;
-        &:hover{
-        background-color: #4e0eff}}
+
+    .avatars {
+      gap: 1rem;
+      .avatar {
+        padding: 0.3rem;
+        img {
+          height: 5rem;
+          width: 5rem;
+        }
+      }
+    }
+
+    .submit-btn {
+      font-size: 0.9rem;
+      padding: 0.8rem 1.6rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+
+    .title-container h1 {
+      font-size: 1.25rem;
+    }
+
+    .avatars {
+      gap: 0.5rem;
+      .avatar {
+        padding: 0.2rem;
+        img {
+          height: 4.5rem;
+          width: 4.5rem;
+        }
+      }
+    }
+
+    .submit-btn {
+      font-size: 0.8rem;
+      padding: 0.7rem 1.5rem;
+    }
+  }
 `;
