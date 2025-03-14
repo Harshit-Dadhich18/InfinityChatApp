@@ -1,18 +1,18 @@
-const ChatappUser = require('../models/userModels');
+const chatappuser = require('../models/userModels');
 const bcrypt = require('bcrypt');
 
 module.exports.register = async (req, res, next) => {
     try {
 
         const { username, email, password } = req.body;
-        const usrenameCheck = await ChatappUser.findOne({ username });
+        const usrenameCheck = await chatappuser.findOne({ username });
         if (usrenameCheck)
             return res.json({ msg: "Username is already used", status: false })
-        const emailCheck = await ChatappUser.findOne({ email });
+        const emailCheck = await chatappuser.findOne({ email });
         if (emailCheck)
             return res.json({ msg: "Email already exist", status: false })
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await ChatappUser.create({
+        const user = await chatappuser.create({
             email,
             username,
             password: hashedPassword
@@ -28,7 +28,7 @@ module.exports.register = async (req, res, next) => {
 module.exports.login = async (req, res, next) => {
     try {
         const { username, password } = req.body;
-        const user = await ChatappUser.findOne({ username });
+        const user = await chatappuser.findOne({ username });
         if (!user)
             return res.json({ msg: "Incorrect Username or Password", status: false });
         const isPassword = await bcrypt.compare(password, user.password);
@@ -46,7 +46,7 @@ module.exports.setAvatar = async (req, res, next) => {
     try {
         const userID = req.params.id;
         const isAvatarImage = req.body.image;
-        const userData = await ChatappUser.findByIdAndUpdate(userID, {
+        const userData = await chatappuser.findByIdAndUpdate(userID, {
             isAvatarImageSet: true,
             isAvatarImage
         })
@@ -60,7 +60,7 @@ module.exports.setAvatar = async (req, res, next) => {
 
 module.exports.getAllUsers = async (req, res, next) => {
     try{
-        const user = await ChatappUser.find({_id: { $ne: req.params.id}}).select([
+        const user = await chatappuser.find({_id: { $ne: req.params.id}}).select([
             "email",
             "username",
             "isAvatarImage",
