@@ -13,7 +13,8 @@ app.use(express.json())
 app.use("/api/auth",userRoutes)
 app.use("/api/message",messagesRoute)
 
-mongoose.connect(process.env.MONGO_URL,{
+// process.env.MONGO_URL
+mongoose.connect(process.env.DB_URL,{
     useNEWUrlParser: true,
     useUnifiedTopology: true
 }).then(()=>{
